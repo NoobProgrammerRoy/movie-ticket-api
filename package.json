@@ -1,0 +1,27 @@
+{
+  "name": "movie-ticket-api",
+  "version": "1.0.0",
+  "description": "A fake movie ticket api for booking movie tickets.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NoobProgrammerRoy/movie-ticket-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NoobProgrammerRoy/movie-ticket-api/issues"
+  },
+  "homepage": "https://github.com/NoobProgrammerRoy/movie-ticket-api#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
