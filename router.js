@@ -32,6 +32,7 @@ router.get('/tickets/:id', async (req, res) => {
 // Book a new ticket
 router.post('/tickets', async (req, res) => {
     try {
+        if (!checkSeat(req.body.seat)) return res.status(400).json({ message: 'Wrong seat number!' })
         const ticket = new Ticket({
             name: req.body.name,
             mobileNumber: req.body.mobileNumber,
@@ -80,5 +81,12 @@ router.delete('/tickets/:id', async (req, res) => {
         res.status(500).json({ message: err.message })
     }
 })
+
+function checkSeat(seat) {
+    if (seat.length < 1 || seat.length > 2) return false
+    if (!/^[A-Z]*$/.test(seat[0])) return false
+    if (!/^[0-9]*$/.test(seat[1])) return false
+    return true
+}
 
 module.exports = router
