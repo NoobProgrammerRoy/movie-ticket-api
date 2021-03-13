@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const Ticket = require('./model')
+const Ticket = require('../models/ticketModel')
 
 // Middleware
 router.use(express.json())
