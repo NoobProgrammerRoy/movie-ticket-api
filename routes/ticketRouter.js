@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Ticket = require('../models/ticketModel')
+const Movie = require('../models/movieModel')
 
 // Middleware
 router.use(express.json())
@@ -11,7 +12,7 @@ router.get('/tickets', async (req, res) => {
         const tickets = await Ticket.find()
         res.json(tickets)
     } catch (err) {
-        res.status(500).json({ message: err.message})
+        res.status(500).json({ message: err.message })
     }
 })
 
@@ -32,6 +33,8 @@ router.get('/tickets/:id', async (req, res) => {
 // Book a new ticket
 router.post('/tickets', async (req, res) => {
     try {
+        const movie = await Movie.findOne({ name: req.body.movie })
+        if (!movie) return res.status(400).json({ message: 'Invalid movie!' })
         if (!checkSeat(req.body.seat)) return res.status(400).json({ message: 'Wrong seat number!' })
         const ticket = new Ticket({
             name: req.body.name,
@@ -52,13 +55,16 @@ router.patch('/tickets/:id', async (req, res) => {
     try {
         const ticket = await Ticket.findById(req.params.id)
         if (ticket) {
-            if(req.body.name != null) ticket.name = req.body.name 
-            if(req.body.mobileNumber != null) ticket.mobileNumber = req.body.mobileNumber 
-            if(req.body.movie != null) ticket.movie = req.body.movie 
-            if(req.body.seat != null) ticket.seat = req.body.seat 
-            if(req.body.price != null) ticket.price = req.body.price
+            if (req.body.name != null) ticket.name = req.body.name
+            if (req.body.mobileNumber != null) ticket.mobileNumber = req.body.mobileNumber
+            if (req.body.movie != null) {
+                const movie = await Movie.findOne({ name: req.body.movie })
+                if (!movie) return res.status(400).json({ message: 'Invalid movie!' })
+            }
+            if (req.body.seat != null) ticket.seat = req.body.seat
+            if (req.body.price != null) ticket.price = req.body.price
             const updatedTicket = await ticket.save()
-            res.json(updatedTicket) 
+            res.json(updatedTicket)
         } else {
             res.status(404).json({ message: 'Ticket not found!' })
         }
@@ -75,7 +81,7 @@ router.delete('/tickets/:id', async (req, res) => {
             await Ticket.remove(ticket)
             res.json({ message: 'Deleted Ticket!' })
         } else {
-            res.status(404).json({ message: 'Ticket not found!'})
+            res.status(404).json({ message: 'Ticket not found!' })
         }
     } catch (err) {
         res.status(500).json({ message: err.message })
